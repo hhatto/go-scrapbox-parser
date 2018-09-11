@@ -120,7 +120,7 @@ func (p *Parser) ToHTML(input io.Reader) []byte {
 			line = p.ParseList(line)
 		}
 
-		output.WriteString(line)
+		output.WriteString(line + "\n")
 	}
 	if err := scanner.Err(); err != nil {
 		log.Printf("scanner error: %v", err)
