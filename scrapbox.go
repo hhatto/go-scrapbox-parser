@@ -16,6 +16,7 @@ var (
 	rgxStrong     = regexp.MustCompile(`\[\[([^\]][^\]]*)\]\]`)
 	rgxStrongAstr = regexp.MustCompile(`\[\*\s*(.*)\]`)
 	rgxSpace      = regexp.MustCompile(`^\s+(\S+)`)
+	rgxCode       = regexp.MustCompile(`` + "`" + `([^` + "`" + `]+)` + "`")
 )
 
 type Parser struct {
@@ -78,6 +79,24 @@ func (p *Parser) ParseStrong(line string) string {
 	return retLine
 }
 
+func (p *Parser) ParseCode(line string) string {
+	retLine := line
+	matchNum := 0
+	match := rgxCode.FindAllStringSubmatchIndex(line, -1)
+	if match != nil {
+		matchNum = len(match)
+	} else {
+		return line
+	}
+
+	for i := 0; i < matchNum; i++ {
+		if m := rgxCode.FindStringSubmatchIndex(retLine); m != nil {
+			retLine = fmt.Sprintf("%s<code>%s</code>%s", retLine[:m[0]], retLine[m[2]:m[3]], retLine[m[1]:])
+		}
+	}
+	return retLine
+}
+
 func (p *Parser) ToHTML(input io.Reader) []byte {
 	var output bytes.Buffer
 	scanner := bufio.NewScanner(input)
@@ -85,6 +104,7 @@ func (p *Parser) ToHTML(input io.Reader) []byte {
 		line := scanner.Text()
 		line = p.ParseHref(line)
 		line = p.ParseStrong(line)
+		line = p.ParseCode(line)
 		line = p.ParseList(line)
 		output.WriteString(line)
 	}

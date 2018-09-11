@@ -64,3 +64,16 @@ this is [[strong text1]] and [[strong text2]].
 		t.Errorf("invalid result. result: %v", output)
 	}
 }
+
+func TestCodeTwice(t *testing.T) {
+	const input = `
+this is ` + "`sample code1` and `code2`" + `.
+`
+	output := execFromString(input)
+	if !strings.Contains(output, "<code>sample code1</code>") {
+		t.Errorf("invalid result. result: %v", output)
+	}
+	if !strings.Contains(output, "<code>code2</code>") {
+		t.Errorf("invalid result. result: %v", output)
+	}
+}
