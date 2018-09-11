@@ -35,7 +35,7 @@ func (p *Parser) ParseList(line string) string {
 	match := rgxSpace.FindStringSubmatchIndex(line)
 	if len(match) > 0 {
 		level := match[2]
-		line = fmt.Sprintf("<p><span class=\"dot\" style=\"margin-left:%dem;\">%s</span></p>", level, line[match[2]:])
+		line = fmt.Sprintf("<p><span class=\"dot\" style=\"margin-left:%dem;\">🌱&nbsp;%s</span></p>", level, line[match[2]:])
 	} else {
 		line = fmt.Sprintf("<p>%s</p>", line)
 	}

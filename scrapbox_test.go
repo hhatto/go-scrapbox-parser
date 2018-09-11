@@ -26,10 +26,12 @@ hello. [http://example.com this is link] cool
 	if !strings.Contains(output, "<a href=\"http://example.com\">this is link</a>") {
 		t.Errorf("invalid result, href: %v", output)
 	}
-	if !strings.Contains(output, "<p><span class=\"dot\">l1</span></p>") {
+	if !strings.Contains(output, "<p><span class=\"dot\" style=\"margin-left:1em;\"") ||
+		!strings.Contains(output, "l1</span></p>") {
 		t.Errorf("invalid result, list1: %v", output)
 	}
-	if !strings.Contains(output, "<p><span class=\"dot\">l2</span></p>") {
+	if !strings.Contains(output, "<p><span class=\"dot\" style=\"margin-left:1em;\"") ||
+		!strings.Contains(output, "l2</span></p>") {
 		t.Errorf("invalid result, list2: %v", output)
 	}
 	if !strings.Contains(output, "<p>aa</p>") {
