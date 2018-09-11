@@ -77,3 +77,13 @@ this is ` + "`sample code1` and `code2`" + `.
 		t.Errorf("invalid result. result: %v", output)
 	}
 }
+
+func TestTitle(t *testing.T) {
+	const input = `hello scrapbox
+text1
+`
+	output := execFromString(input)
+	if !strings.Contains(output, "<h1>hello scrapbox</h1>") {
+		t.Errorf("invalid result. result: %v", output)
+	}
+}

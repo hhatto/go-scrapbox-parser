@@ -29,6 +29,10 @@ func NewParser() *Parser {
 	}
 }
 
+func (p *Parser) ParseTitle(line string) string {
+	return fmt.Sprintf("<h1>%s</h1>", line)
+}
+
 func (p *Parser) ParseList(line string) string {
 	if line == "" {
 		return line
@@ -100,12 +104,22 @@ func (p *Parser) ParseCode(line string) string {
 func (p *Parser) ToHTML(input io.Reader) []byte {
 	var output bytes.Buffer
 	scanner := bufio.NewScanner(input)
+	first := true
 	for scanner.Scan() {
 		line := scanner.Text()
+		// inline
 		line = p.ParseHref(line)
 		line = p.ParseStrong(line)
 		line = p.ParseCode(line)
-		line = p.ParseList(line)
+
+		// block
+		if first {
+			line = p.ParseTitle(line)
+			first = false
+		} else {
+			line = p.ParseList(line)
+		}
+
 		output.WriteString(line)
 	}
 	if err := scanner.Err(); err != nil {
