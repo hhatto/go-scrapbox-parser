@@ -15,6 +15,7 @@ var (
 	rgxHrefBefore = regexp.MustCompile(`\[(https?://[./a-zA-Z0-9]*)\s(.*)\]`)
 	rgxStrong     = regexp.MustCompile(`\[\[([^\]][^\]]*)\]\]`)
 	rgxStrongAstr = regexp.MustCompile(`\[\*\s*(.*)\]`)
+	rgxSpace      = regexp.MustCompile(`^\s+(\S+)`)
 )
 
 type Parser struct {
@@ -28,14 +29,15 @@ func NewParser() *Parser {
 }
 
 func (p *Parser) ParseList(line string) string {
-	match, err := regexp.MatchString(`^\s+`, line)
-	if err != nil {
+	if line == "" {
 		return line
 	}
-	if match {
-		fmt.Println(match)
-		ret := ""
-		line = fmt.Sprintf("<span class=\"dot\">%s</span>", ret)
+	match := rgxSpace.FindStringSubmatchIndex(line)
+	if len(match) > 0 {
+		level := match[2]
+		line = fmt.Sprintf("<p><span class=\"dot\" style=\"margin-left:%dem;\">%s</span></p>", level, line[match[2]:])
+	} else {
+		line = fmt.Sprintf("<p>%s</p>", line)
 	}
 	return line
 }
@@ -83,6 +85,7 @@ func (p *Parser) ToHTML(input io.Reader) []byte {
 		line := scanner.Text()
 		line = p.ParseHref(line)
 		line = p.ParseStrong(line)
+		line = p.ParseList(line)
 		output.WriteString(line)
 	}
 	if err := scanner.Err(); err != nil {
