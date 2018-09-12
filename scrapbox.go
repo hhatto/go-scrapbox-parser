@@ -35,7 +35,7 @@ func (p *Parser) ParseTitle(line string) string {
 
 func (p *Parser) ParseList(line string) string {
 	if line == "" {
-		return line
+		return fmt.Sprintf("<p>&nbsp;</p>")
 	}
 	match := rgxSpace.FindStringSubmatchIndex(line)
 	if len(match) > 0 {

@@ -39,6 +39,33 @@ hello. [http://example.com this is link] cool
 	}
 }
 
+func TestListWithTab(t *testing.T) {
+	const input = `
+aa
+	l1 with 1tab
+	l2 with 1tab
+ l3 with 1space
+		l4 with 2tab
+`
+	output := execFromString(input)
+	if !strings.Contains(output, "<p><span class=\"dot\" style=\"margin-left:1em;\"") ||
+		!strings.Contains(output, "l1 with 1tab</span></p>") {
+		t.Errorf("invalid result, list1: %v", output)
+	}
+	if !strings.Contains(output, "<p><span class=\"dot\" style=\"margin-left:1em;\"") ||
+		!strings.Contains(output, "l2 with 1tab</span></p>") {
+		t.Errorf("invalid result, list1: %v", output)
+	}
+	if !strings.Contains(output, "<p><span class=\"dot\" style=\"margin-left:1em;\"") ||
+		!strings.Contains(output, "l3 with 1space</span></p>") {
+		t.Errorf("invalid result, list1: %v", output)
+	}
+	if !strings.Contains(output, "<p><span class=\"dot\" style=\"margin-left:2em;\"") ||
+		!strings.Contains(output, "l4 with 2tab</span></p>") {
+		t.Errorf("invalid result, list1: %v", output)
+	}
+}
+
 func TestHrefTwice(t *testing.T) {
 	const input = `
 this is [link http://example1.com] and [http://example2.com hello world].
