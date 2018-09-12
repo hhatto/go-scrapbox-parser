@@ -78,6 +78,16 @@ this is ` + "`sample code1` and `code2`" + `.
 	}
 }
 
+func TestRawLink(t *testing.T) {
+	const input = `
+text [link1 http://example1.com] http://example.com text2. [http://example2.com link2]. text
+`
+	output := execFromString(input)
+	if !strings.Contains(output, `<a href="http://example.com">http://example.com</a>`) {
+		t.Errorf("invalid result. result: %v", output)
+	}
+}
+
 func TestTitle(t *testing.T) {
 	const input = `hello scrapbox
 text1
